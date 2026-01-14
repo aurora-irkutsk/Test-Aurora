@@ -9,7 +9,6 @@ __pycache__/
 Thumbs.db
 
 # Файлы IDE
-.env
 .vscode/
 .idea/
 
