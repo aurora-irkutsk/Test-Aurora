@@ -1,0 +1,9 @@
+# Исключаем локальные файлы
+.git
+.gitignore
+.vscode/
+node_modules/
+venv/
+__pycache__/
+*.log
+*.pyc
