@@ -1,10 +1,10 @@
-# Используем официальный образ Python 3.11
+# Используем официальный образ Python
 FROM python:3.11-slim
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем requirements.txt и устанавливаем зависимости
+# Копируем зависимости и устанавливаем их
 COPY backend/requirements.txt .
 RUN apt-get update && apt-get install -y build-essential
 RUN pip install --no-cache-dir -r requirements.txt
@@ -12,8 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копируем весь проект
 COPY . .
 
-# Устанавливаем права на выполнение
+# Устанавливаем права
 RUN chmod -R 755 /app
 
-# Указываем команду запуска
+# Запускаем приложение
 CMD ["python", "backend/app.py"]

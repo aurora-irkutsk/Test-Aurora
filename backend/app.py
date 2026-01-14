@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import requests
 import os
 
 app = Flask(__name__)
+CORS(app)  # Разрешает запросы с любого домена
 
-# Токены Telegram
+# Получаем секреты из переменных окружения
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
@@ -12,12 +14,12 @@ CHAT_ID = os.getenv("CHAT_ID")
 def submit():
     try:
         data = request.json
-        work = data.get('work')
-        address = data.get('address')
-        phone = data.get('phone')
+        work = data.get('work', 'Не указано')
+        address = data.get('address', 'Не указано')
+        phone = data.get('phone', 'Не указано')
 
         message = f"🔔 Новая заявка через чат-бот!\n\n" \
-                  f"Вид работ: {work}\n" \
+                  f"Что интересует: {work}\n" \
                   f"Адрес: {address}\n" \
                   f"Телефон: {phone}"
 
@@ -26,10 +28,14 @@ def submit():
         payload = {"chat_id": CHAT_ID, "text": message}
         response = requests.post(url, json=payload)
 
-        return jsonify({"status": "ok"}), 200
+        if response.status_code == 200:
+            return jsonify({"status": "ok"}), 200
+        else:
+            return jsonify({"status": "error", "telegram_error": response.text}), 500
+
     except Exception as e:
-        print("Ошибка:", e)
-        return jsonify({"status": "error"}), 500
+        print(f"Ошибка сервера: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=False)
