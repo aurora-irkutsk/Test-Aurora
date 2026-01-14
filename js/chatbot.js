@@ -94,7 +94,7 @@ class ChatBot {
             this.step = 2;
         } else if (this.step === 2) {
             this.data.address = value;
-            await this.typeMessage(`Спасибо! Адрес: ${value}.\n\nТеперь введите ваш номер телефона — мы подставим +7 автоматически:\n\nПример: 9025605225`);
+            await this.typeMessage(`Спасибо! Адрес: ${value}.\n\nТеперь введите ваш номер телефона:\n\nПример: 9025605225`);
             this.step = 3;
         } else if (this.step === 3) {
             // Проверяем номер телефона
@@ -116,7 +116,7 @@ class ChatBot {
                     phone: fullPhone
                 };
 
-                const res = await fetch('http://localhost:5000/submit', {
+                const res = await fetch('https://your-app.railway.app/submit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -128,7 +128,7 @@ class ChatBot {
                     await this.typeMessage('❌ Произошла ошибка. Попробуйте позже или позвоните напрямую.');
                 }
             } catch (err) {
-                await this.typeMessage('❌ Нет соединения. Попробуйте позже.');
+                await this.typeMessage('❌ Не удалось отправить заявку. Попробуйте позже или позвоните напрямую. +7 902 560 52 25');
             }
 
             this.step = 0;
